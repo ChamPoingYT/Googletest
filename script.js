@@ -27,11 +27,12 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
     if (valid) {
         // If form is valid, submit the form or do something else
-        alert('Formulaire soumis avec succès!');
+        this.submit(); // Submit the form
     }
 });
 
 function validateEmail(email) {
     const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return re.test(email);
+}
 }
