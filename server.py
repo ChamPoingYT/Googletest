@@ -1,54 +1,50 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import os
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting
 
-HOST_ADDRESS = 'localhost'
-HOST_PORT = 8080
+    // Clear previous error messages
+    document.getElementById('emailError').style.display = 'none';
+    document.getElementById('passwordError').style.display = 'none';
 
-class PhishingServer(BaseHTTPRequestHandler):
-    
-    def _send_response(self, content, content_type='text/html'):
-        self.send_response(200)
-        self.send_header('Content-type', content_type)
-        self.end_headers()
-        self.wfile.write(content.encode('utf-8'))
+    // Get form values
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-    def do_GET(self):
-        path = self.path
-        if path == '/':
-            with open('index.html', 'r', encoding='utf-8') as file:
-                content = file.read()
-            self._send_response(content)
-        elif path == '/styles.css':
-            with open('styles.css', 'r', encoding='utf-8') as file:
-                content = file.read()
-            self._send_response(content, content_type='text/css')
-        elif path == '/script.js':
-            with open('script.js', 'r', encoding='utf-8') as file:
-                content = file.read()
-            self._send_response(content, content_type='application/javascript')
-        else:
-            self.send_response(404)
-            self.end_headers()
+    let valid = true;
 
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length).decode('utf-8')
+    // Validate email
+    if (!validateEmail(email)) {
+        document.getElementById('emailError').innerText = 'Veuillez entrer une adresse e-mail valide.';
+        document.getElementById('emailError').style.display = 'block';
+        valid = false;
+    }
 
-        # Parse POST data
-        params = parse_qs(post_data)
-        email = params.get('email', [''])[0]
-        password = params.get('password', [''])[0]
+    // Validate password
+    if (password.length < 6) {
+        document.getElementById('passwordError').innerText = 'Le mot de passe doit comporter au moins 6 caractères.';
+        document.getElementById('passwordError').style.display = 'block';
+        valid = false;
+    }
 
-        # Log captured information (for demonstration)
-        print(f'Email: {email}, Password: {password}')
+    if (valid) {
+        // If form is valid, send data to the server
+        fetch('http://localhost:8080', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data); // Show the response from the server
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
 
-        self._send_response('Form submitted successfully!')
-
-def run_server():
-    server_address = (HOST_ADDRESS, HOST_PORT)
-    httpd = HTTPServer(server_address, PhishingServer)
-    print(f'Starting phishing server on http://{HOST_ADDRESS}:{HOST_PORT}')
-    httpd.serve_forever()
-
-if __name__ == '__main__':
-    run_server()
+function validateEmail(email) {
+    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return re.test(email);
+}
